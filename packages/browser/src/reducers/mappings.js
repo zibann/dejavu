@@ -19,33 +19,32 @@ const initialState = {
 	shouldShowNestedSwitch: false,
 };
 
-
 const l = [
-  'review_meta_id',
-  'review_meta_confirmed',
-  'naver_place_id',
-  'rm_view_count',
-  'date_last_contact',
-  'ignore',
-  'name',
-  'naver_name',
-  'naver_place_confirmed',
-  'product_name',
-  'formatted_phone_number',
-  'etc',
-  'size_operation',
-  'formatted_address',
-  'pv_list',
-  'product_info',
-  'product_open_date',
-  'extra_product_info',
-  'sticker',
-  'littlehome_only',
-  'lowest_price',
-  'provider_name',
-
+	'review_meta_id',
+	'review_meta_confirmed',
+	'naver_place_id',
+	'rm_view_count',
+	'rm_product_id',
+	'provider_candidates.formatted_phone_number',
+	'date_last_contact',
+	'ignore',
+	'provider_candidates.name',
+	'naver_name',
+	'naver_place_confirmed',
+	'formatted_phone_number',
+	'etc',
+	'size_operation',
+	'formatted_address',
+	'pv_list',
+	'product_info',
+	'product_open_date',
+	'extra_product_info',
+	'sticker',
+	'littlehome_only',
+	'lowest_price',
+	'provider_name',
+	'provider_candidates.product_name',
 ];
-
 
 const mappings = (state = initialState, action) => {
 	const {
@@ -101,37 +100,34 @@ const mappings = (state = initialState, action) => {
 				...state,
 				isLoading: false,
 			};
-    
-  case MAPPINGS.SET_VISIBLE_COLUMNS:
 
-    let visibleColumns_ = visibleColumns.slice();
+		case MAPPINGS.SET_VISIBLE_COLUMNS:
+			let visibleColumns_ = visibleColumns.slice();
 
-    visibleColumns_ = visibleColumns_.filter((e) => {
-      return l.indexOf(e) >= 0;
-    })
-      
-    visibleColumns_.sort((a, b) => {
+			visibleColumns_ = visibleColumns_.filter(e => {
+				return l.indexOf(e) >= 0;
+			});
 
-      if (l.indexOf(a) === -1) {
-        if (l.indexOf(b) === -1) {
-          return 0
-        }
-        return 1
-      }
-      if (l.indexOf(b) === -1) {
-        if (l.indexOf(a) === -1) {
-          return 0
-        }
-        return -1
-      }
-      
-        if (l.indexOf(a) < l.indexOf(b) ) {
-          return -1;
-        }
+			visibleColumns_.sort((a, b) => {
+				if (l.indexOf(a) === -1) {
+					if (l.indexOf(b) === -1) {
+						return 0;
+					}
+					return 1;
+				}
+				if (l.indexOf(b) === -1) {
+					if (l.indexOf(a) === -1) {
+						return 0;
+					}
+					return -1;
+				}
 
-        return 1;
-      });
-    
+				if (l.indexOf(a) < l.indexOf(b)) {
+					return -1;
+				}
+
+				return 1;
+			});
 
 			return {
 				...state,
@@ -139,21 +135,40 @@ const mappings = (state = initialState, action) => {
 				visibleColumns: visibleColumns_,
 			};
 
-			// return {
-			// 	...state,
+		// return {
+		// 	...state,
 
-			// 	visibleColumns,
-			// };
-    
-	case MAPPINGS.SET_NESTED_VISIBLE_COLUMNS:
+		// 	visibleColumns,
+		// };
 
-    let nestedVisibleColumns_ = nestedVisibleColumns.slice();
+		case MAPPINGS.SET_NESTED_VISIBLE_COLUMNS:
+			let nestedVisibleColumns_ = nestedVisibleColumns.slice();
 
-    nestedVisibleColumns_ = nestedVisibleColumns_.filter((e) => {
-      return l.indexOf(e) >= 0;
-    })
-    
-    
+			nestedVisibleColumns_.sort((a, b) => {
+				if (l.indexOf(a) === -1) {
+					if (l.indexOf(b) === -1) {
+						return 0;
+					}
+					return 1;
+				}
+				if (l.indexOf(b) === -1) {
+					if (l.indexOf(a) === -1) {
+						return 0;
+					}
+					return -1;
+				}
+
+				if (l.indexOf(a) < l.indexOf(b)) {
+					return -1;
+				}
+
+				return 1;
+			});
+
+			nestedVisibleColumns_ = nestedVisibleColumns_.filter(e => {
+				return l.indexOf(e) >= 0;
+			});
+
 			return {
 				...state,
 				nestedVisibleColumns: nestedVisibleColumns_,
@@ -193,7 +208,7 @@ const getVisibleColumns = state => state.mappings.visibleColumns;
 
 //   _.pick(visibleColumns, ['created-at', 'date_last_contact'])
 //   return columns;
-  
+
 // };
 
 const getSearchableColumns = state => state.mappings.searchableColumns;
