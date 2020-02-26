@@ -32,6 +32,7 @@
 		"emotion": "^9.2.12",
 		"file-saver": "^2.0.0-rc.4",
 		"flat": "^4.1.0",
+		"immutability-helper": "^3.0.2",
 		"ismobilejs": "^0.5.1",
 		"lodash": "^4.17.11",
 		"lzma": "^2.3.2",
@@ -40,6 +41,8 @@
 		"prop-types": "^15.6.2",
 		"react-ace": "^6.5.0",
 		"react-custom-scrollbars": "^4.2.1",
+		"react-dnd": "^10.0.2",
+		"react-dnd-html5-backend": "^10.0.2",
 		"react-element-to-jsx-string": "^14.0.2",
 		"react-emotion": "^9.2.12",
 		"react-expand-collapse": "^0.2.0",
@@ -75,7 +78,7 @@
 		"lib/"
 	],
 	"scripts": {
-		"watch": "NODE_ENV=development webpack-dev-server --open --mode development --content-base dist/app --history-api-fallback --hot --colors --port 1358",
+		"watch": "NODE_ENV=development webpack-dev-server --open --mode development --content-base dist/app --history-api-fallback --hot --colors --port 10359 --host 0.0.0.0 --disable-host-check",
 		"watch:site": "NODE_ENV=development webpack-dev-server --open --mode development --content-base dist/site --history-api-fallback --hot --progress --colors --port 1359 --config webpack.config.site.js",
 		"build": "yarn build:app && yarn build:site",
 		"build:app": "NODE_ENV=production webpack",

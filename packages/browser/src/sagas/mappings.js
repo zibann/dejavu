@@ -98,12 +98,12 @@ export function* handleFetchMappings() {
 				},
 			};
 
-			const allColumns = [
+			let allColumns = [
 				...META_FIELDS,
 				...extractColumns(mappings[appname], 'properties'),
 			];
 
-			const allNestedColumns = [
+			let allNestedColumns = [
 				...META_FIELDS,
 				...extractColumns(mappings[appname], 'nestedProperties'),
 			];

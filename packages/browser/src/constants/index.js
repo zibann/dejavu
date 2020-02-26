@@ -38,3 +38,7 @@ export const SETTINGS = {
 		},
 	},
 };
+
+export const ItemTypes = {
+	MAPPING: 'mapping',
+};

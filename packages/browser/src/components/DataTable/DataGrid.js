@@ -29,6 +29,25 @@ const ID_WIDTH = isMobile.any ? 120 : 250;
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 
+
+// https://stackoverflow.com/a/56692844
+function getall(input, path = "", accumulator = []) {
+  path = path.split(".");
+  const head = path.shift();
+  if (input && input[head] !== undefined) {
+    if (!path.length) {
+        accumulator.push(input[head]);
+    } else if (Array.isArray(input[head])) {
+            input[head].forEach(el => {
+                getall(el, path.join('.'), accumulator);
+            });
+    } else {
+        getall(input[head], path.join('.'), accumulator);
+    }
+  }
+  return accumulator;
+}
+
 type Props = {
 	visibleColumns: string[],
 	mode: string,
@@ -133,6 +152,13 @@ class DataGrid extends Component<Props, State> {
 			? 'nestedProperties'
 			: 'properties';
 		const column = columns[columnIndex];
+
+    let v = get(data[rowIndex], column);
+
+    if (column.startsWith("provider_candidates.")) {
+      v = getall(data[rowIndex], column);
+      v = v.join(' / ')
+    }
 		return isMetaField(column) ? (
 			<div
 				style={{
@@ -141,7 +167,7 @@ class DataGrid extends Component<Props, State> {
 				}}
 				key={key}
 			>
-				{get(data[rowIndex], column)}
+        {v}
 			</div>
 		) : (
 			<div
@@ -160,7 +186,7 @@ class DataGrid extends Component<Props, State> {
 					shouldAutoFocus
 					style={style}
 				>
-					{get(data[rowIndex], column)}
+          {v}
 				</CellRender>
 			</div>
 		);

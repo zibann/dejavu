@@ -1,24 +1,28 @@
 FROM node:10.13.0-alpine
 MAINTAINER appbase.io <info@appbase.io>
 
-WORKDIR /dejavu
+RUN addgroup -S -g 201 dejavu && \
+    adduser -S -u 201 -G dejavu dejavu
 
-ADD package.json yarn.lock /dejavu/
+WORKDIR /dejavu
 
 RUN apk --no-cache update \
     && apk --no-cache add git \
     && rm -rf /var/cache/apk/*
 
-ADD . /dejavu
+
+ADD package.json yarn.lock /dejavu/
+
 
 RUN yarn \
     && yarn cache clean && yarn build:dejavu:app \
     && rm -rf /dejavu/node_modules \
     && rm -rf /tmp/*
 
-RUN addgroup -S -g 201 dejavu && \
-    adduser -S -u 201 -G dejavu dejavu && \
-    chown -R dejavu:dejavu /dejavu
+
+ADD . /dejavu
+
+RUN chown -R dejavu:dejavu /dejavu
 
 USER dejavu
 

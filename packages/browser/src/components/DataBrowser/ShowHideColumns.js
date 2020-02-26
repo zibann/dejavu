@@ -9,13 +9,17 @@ import {
 	getVisibleColumns,
 	getNestedVisibleColumns,
 	getNestedColumns,
+  getSortedColumns,
 } from '../../reducers/mappings';
 import { getIsShowingNestedColumns } from '../../reducers/nestedColumns';
 import {
 	setVisibleColumns,
 	setNestedVisibleColumns,
+  setSortedColumns,
 } from '../../actions/mappings';
 import colors from '../theme/colors';
+
+import Checkboxes from './Checkboxes';
 
 const { Group } = Checkbox;
 
@@ -45,6 +49,9 @@ class ShowHideColumns extends Component<Props, State> {
 			this.handleDropdownOutsideClick,
 			false,
 		);
+
+    this.toggleCheckbox = this.toggleCheckbox.bind(this);
+    this.handleChangeCheckboxOrder = this.handleChangeCheckboxOrder.bind(this);
 	}
 
 	componentWillUnmount() {
@@ -54,7 +61,7 @@ class ShowHideColumns extends Component<Props, State> {
 			false,
 		);
 	}
-
+  
 	handleDropdownOutsideClick = (e: any) => {
 		if (
 			this.showHideDropdownNode &&
@@ -141,7 +148,7 @@ class ShowHideColumns extends Component<Props, State> {
 			: allColumns;
 		const columns = isShowingNestedColumns
 			? nestedVisibleColumns
-			: visibleColumns;
+			    : visibleColumns;
 
 		return (
 			<Dropdown
@@ -175,15 +182,7 @@ class ShowHideColumns extends Component<Props, State> {
 						>
 							Select All
 						</Checkbox>
-						<Group
-							options={allMappingColumns}
-							css={{
-								display: 'grid !important',
-								gridGap: '5px !important',
-							}}
-							value={columns}
-							onChange={this.handleVisibleColumnsChange}
-						/>
+            {this.renderCheckboxes()}
 					</div>
 				}
 				visible={showDropdown}
@@ -203,6 +202,93 @@ class ShowHideColumns extends Component<Props, State> {
 			</Dropdown>
 		);
 	}
+
+  getOptions(options) {
+    // https://github.com/Microsoft/TypeScript/issues/7960
+    return (options).map(option => {
+      if (typeof option === 'string') {
+        return {
+          label: option,
+          value: option,
+        } 
+      }
+      return option;
+    });
+  }
+  
+
+  renderCheckboxes() {
+		const {
+			columns: allColumns,
+			nestedColumns: allNestedColumns,
+			isShowingNestedColumns,
+		} = this.props;
+    
+		const allMappingColumns = isShowingNestedColumns
+			? allNestedColumns
+			    : allColumns;
+
+    let columns = []
+    if (Array.isArray(this.props.sortedColumns) && this.props.sortedColumns.length) {
+      columns = this.props.sortedColumns
+    } else {
+      columns = allMappingColumns
+    }
+
+    let options = this.getOptions(columns)
+    let selectedColumns = this.getSelectedColumns();
+
+    return (
+      <Checkboxes
+        options={options}
+        selectedColumns={selectedColumns}
+        toggleCheckbox={this.toggleCheckbox}
+        onChangeOrder={this.handleChangeCheckboxOrder}
+      />
+    )
+    
+  }
+
+  getSelectedColumns() {
+    let selectedColumns = []
+    if (this.props.isShowingNestedColumns) {
+      selectedColumns = [...this.props.nestedVisibleColumns]
+    } else {
+      selectedColumns = [...this.props.visibleColumns]
+    }
+    return selectedColumns
+  }
+
+  toggleCheckbox(e, option) {
+
+    let selectedColumns = this.getSelectedColumns();
+    const optionIndex = selectedColumns.indexOf(option.value);
+    if (optionIndex === -1) {
+      let index = this.props.sortedColumns.indexOf(option.value)
+      selectedColumns.splice(index, 0, option.value);
+    } else {
+      selectedColumns.splice(optionIndex, 1);
+    }
+
+    this.handleVisibleColumnsChange(selectedColumns)
+  }
+
+  handleChangeCheckboxOrder(options) {
+
+    let columns = options.map(option => {
+      return option.value
+    })
+
+    let selectedColumns = this.getSelectedColumns();
+
+    selectedColumns.sort(function(a, b) {
+      return columns.indexOf(a) - columns.indexOf(b);
+    });
+
+    this.handleVisibleColumnsChange(selectedColumns)
+    this.props.setSortedColumns(columns);
+    
+  }
 }
 
 const mapStateToProps = state => ({
@@ -211,11 +297,13 @@ const mapStateToProps = state => ({
 	visibleColumns: getVisibleColumns(state),
 	nestedVisibleColumns: getNestedVisibleColumns(state),
 	isShowingNestedColumns: getIsShowingNestedColumns(state),
+  sortedColumns: getSortedColumns(state),
 });
 
 const mapDispatchToProps = {
 	setVisibleColumns,
 	setNestedVisibleColumns,
+  setSortedColumns,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShowHideColumns);

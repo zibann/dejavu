@@ -45,7 +45,8 @@
 		"papaparse": "^4.6.1",
 		"react-custom-scrollbars": "^4.2.1",
 		"react-json-editor-ajrm": "^2.5.8",
-		"react-virtualized": "^9.21.0"
+		"react-virtualized": "^9.21.0",
+		"redux-persist": "^6.0.0"
 	},
 	"devDependencies": {
 		"react": "^16.12.0",

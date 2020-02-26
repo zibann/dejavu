@@ -98,6 +98,23 @@ class DataColumnHeader extends Component<Props> {
 			col,
 		);
 
+    const nameMapper = {
+      "provider_candidates.": "pc.",
+      "product.": "p.",
+      "naver.": "n.",
+      "review_meta.": "rm.",
+    }
+
+    let colName = col
+
+    for (let [key, value] of Object.entries(nameMapper)) {
+      if (colName.startsWith(key)) {
+        colName = value + colName.split(key).join("")
+        break
+      }
+    }
+    
+
 		const sortableColumnIndex = getSortableColumnIndex(
 			sortableColumns,
 			col,
@@ -134,7 +151,7 @@ class DataColumnHeader extends Component<Props> {
 									}}
 									className={overflowStyles}
 								>
-									{col}
+									{colName}
 								</span>
 							</Popover>
 						</Flex>

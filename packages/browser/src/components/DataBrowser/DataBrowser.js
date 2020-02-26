@@ -7,6 +7,9 @@ import { Skeleton } from 'antd';
 import { mediaMin } from '@divyanshu013/media';
 import { AutoSizer } from 'react-virtualized';
 
+import { DndProvider } from 'react-dnd';
+import Backend from 'react-dnd-html5-backend';
+
 import Flex from '../Flex';
 import Actions from './Actions';
 import AddRowModal from './AddRowModal';
@@ -42,6 +45,8 @@ type Props = {
 	updateReactiveList: () => void,
 	hasCloneApp: boolean,
 };
+
+
 
 class DataBrowser extends Component<Props> {
 	headerRef = createRef();
@@ -104,67 +109,69 @@ class DataBrowser extends Component<Props> {
 
 		return (
 			<Skeleton loading={isLoading} active>
-				{!isLoading && !isDataLoading && mappings && (
-					<div css={{ position: 'relative' }}>
-						<ReactiveBase {...baseProps}>
-							<div>
-								<Actions onReload={this.handleReload} />
-								<NestedColumnToggle />
-								<GlobalSearch />
-							</div>
-							<ApplyQueryBanner />
-							<div
-								id="result-list"
-								css={{
-									marginTop: 15,
-									border: `1px solid ${colors.tableBorderColor}`,
-									borderRadius: 3,
-									width: '100%',
-									height:
+        <DndProvider backend={Backend}>
+				  {!isLoading && !isDataLoading && mappings && (
+					  <div css={{ position: 'relative' }}>
+						  <ReactiveBase {...baseProps}>
+							  <div>
+								  <Actions onReload={this.handleReload} />
+								  <NestedColumnToggle />
+								  <GlobalSearch />
+							  </div>
+							  <ApplyQueryBanner />
+							  <div
+								  id="result-list"
+								  css={{
+									  marginTop: 15,
+									  border: `1px solid ${colors.tableBorderColor}`,
+									  borderRadius: 3,
+									  width: '100%',
+									  height:
 										window.innerHeight -
-										(hideAppSwitcher ? 250 : 350),
-									overflow: 'visible',
-								}}
-							>
-								<AutoSizer
-									css={{
-										height: '100% !important',
-										width: '100% !important',
-									}}
-								>
-									{({ height, width }) => (
-										<>
-											<DataTableHeader
-												ref={this.headerRef}
-											/>
-											<ResultList
-												height={height}
-												width={width}
-												headerRef={this.headerRef}
-											/>
-										</>
-									)}
-								</AutoSizer>
-							</div>
-						</ReactiveBase>
-					</div>
-				)}
-				{mappings && (
-					<Flex
-						css={{
-							marginTop: 100,
-							[mediaMin.medium]: {
-								marginTop: 10,
-							},
-						}}
-						wrap="no-wrap"
-						alignItems="center"
-					>
-						{indexes.length <= 1 && hasCloneApp && <CloneApp />}
-						<AddRowModal />
-						<AddFieldModal />
-					</Flex>
-				)}
+										  (hideAppSwitcher ? 250 : 350),
+									  overflow: 'visible',
+								  }}
+							  >
+								  <AutoSizer
+									  css={{
+										  height: '100% !important',
+										  width: '100% !important',
+									  }}
+								  >
+									  {({ height, width }) => (
+										  <>
+											  <DataTableHeader
+												  ref={this.headerRef}
+											  />
+											  <ResultList
+												  height={height}
+												  width={width}
+												  headerRef={this.headerRef}
+											  />
+										  </>
+									  )}
+								  </AutoSizer>
+							  </div>
+						  </ReactiveBase>
+					  </div>
+				  )}
+				  {mappings && (
+					  <Flex
+						  css={{
+							  marginTop: 100,
+							  [mediaMin.medium]: {
+								  marginTop: 10,
+							  },
+						  }}
+						  wrap="no-wrap"
+						  alignItems="center"
+					  >
+						  {indexes.length <= 1 && hasCloneApp && <CloneApp />}
+						  <AddRowModal />
+						  <AddFieldModal />
+					  </Flex>
+				  )}
+        </DndProvider>      
 			</Skeleton>
 		);
 	}

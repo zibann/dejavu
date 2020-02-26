@@ -1,4 +1,7 @@
+import _ from 'lodash';
 import { MAPPINGS } from '../actions/constants';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 const initialState = {
 	data: null,
@@ -11,6 +14,7 @@ const initialState = {
 	searchableColumns: [],
 	typePropertyMapping: {},
 	nestedVisibleColumns: [],
+	sortedColumns: [],
 	nestedSearchableColumns: [],
 	nestedColumns: [],
 	termsAggregationColumns: [],
@@ -26,10 +30,11 @@ const mappings = (state = initialState, action) => {
 		types,
 		indexTypeMap,
 		columns,
-		visibleColumns,
 		searchableColumns,
 		typePropertyMapping,
+		visibleColumns,
 		nestedVisibleColumns,
+		sortedColumns,
 		nestedSearchableColumns,
 		nestedColumns,
 		appName,
@@ -39,6 +44,7 @@ const mappings = (state = initialState, action) => {
 		searchableColumnsWeights,
 		nestedSearchableColumnsWeights,
 	} = action;
+
 	switch (type) {
 		case MAPPINGS.MAPPINGS_FETCH_REQUEST:
 			return {
@@ -54,10 +60,11 @@ const mappings = (state = initialState, action) => {
 				indexTypeMap,
 				isLoading: false,
 				columns,
-				visibleColumns,
+				visibleColumns: state.visibleColumns || visibleColumns,
 				searchableColumns,
 				typePropertyMapping,
-				nestedVisibleColumns,
+				nestedVisibleColumns:
+					state.nestedVisibleColumns || nestedVisibleColumns,
 				nestedSearchableColumns,
 				nestedColumns,
 				termsAggregationColumns,
@@ -81,6 +88,13 @@ const mappings = (state = initialState, action) => {
 				...state,
 				nestedVisibleColumns,
 			};
+
+		case MAPPINGS.SET_SORTED_COLUMNS:
+			return {
+				...state,
+				sortedColumns,
+			};
+
 		case MAPPINGS.SET_ARRAY_FIELDS:
 			return {
 				...state,
@@ -110,6 +124,16 @@ const getTypes = state => state.mappings.types;
 const getIndexTypeMap = state => state.mappings.indexTypeMap;
 const getColumns = state => state.mappings.columns;
 const getVisibleColumns = state => state.mappings.visibleColumns;
+const getSortedColumns = state => state.mappings.sortedColumns;
+// const getVisibleColumns = state => {
+
+//   const { visibleColumns } = state.mappings;
+
+//   _.pick(visibleColumns, ['created-at', 'date_last_contact'])
+//   return columns;
+
+// };
+
 const getSearchableColumns = state => state.mappings.searchableColumns;
 const getTypePropertyMapping = state => state.mappings.typePropertyMapping;
 const getNestedColumns = state => state.mappings.nestedColumns;
@@ -144,6 +168,16 @@ export {
 	getShouldShowNestedSwitch,
 	getSearchableColumnsWeights,
 	getNesetedSearchableColumnsWeights,
+	getSortedColumns,
 };
 
-export default mappings;
+const persistConfig = {
+	timeout: 0,
+	key: 'mappings',
+	storage,
+	blacklist: [''],
+};
+
+const persistedReducer = persistReducer(persistConfig, mappings);
+
+export default persistedReducer;

@@ -72,6 +72,21 @@ const setNestedVisibleColumns = nestedVisibleColumns => ({
 	nestedVisibleColumns,
 });
 
+const setSortedColumns = sortedColumns => ({
+	type: MAPPINGS.SET_SORTED_COLUMNS,
+	sortedColumns,
+});
+
+const setNestedColumns = nestedColumns => ({
+	type: MAPPINGS.SET_NESTED_COLUMNS,
+	nestedColumns,
+});
+
+const setColumns = columns => ({
+	type: MAPPINGS.SET_COLUMNS,
+	columns,
+});
+
 const setArrayFields = (
 	nestedColumns,
 	nestedVisibleColumns,
@@ -97,4 +112,7 @@ export {
 	setVisibleColumns,
 	setNestedVisibleColumns,
 	setArrayFields,
+	setNestedColumns,
+	setColumns,
+	setSortedColumns,
 };

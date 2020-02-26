@@ -14,7 +14,8 @@ const setCellValue = async (app, type, rawUrl, id, property, value) => {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(app);
-		const doc = unflatten({ [property]: value });
+		let doc = unflatten({ [property]: value });
+		doc = { ...doc, modified_at: new Date() };
 		const formattedId = encodeURIComponent(id);
 
 		const res = await fetch(

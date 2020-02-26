@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import DataBrowserContainer from './components/DataBrowserContainer/DataBrowserContainer';
 import configureStore from './store';
+import { PersistGate } from 'redux-persist/integration/react'
 
 // shared components
 import DefaultFlex from './components/Flex';
@@ -27,7 +28,7 @@ import colors from './components/theme/colors';
 import './antd.css';
 
 // shared store
-const store = configureStore();
+const { store, persistor } = configureStore();
 
 function WithConfigProvider(props) {
 	return (
@@ -59,14 +60,17 @@ const ConnectApp = props => (
 const DataBrowserWrapper = props => (
 	<WithConfigProvider>
 		<Provider store={store}>
-			<BrowserRouter>
-				<section>
-					<DefaultFlashMessage />
-					<DefaultConnectApp {...props} />
-					{/* eslint-disable-next-line react/prop-types */}
-					<DataBrowserContainer hasCloneApp={props.hasCloneApp} />
-				</section>
-			</BrowserRouter>
+      <PersistGate loading={null} persistor={persistor}>
+			  <BrowserRouter>
+				  <section>
+					  <DefaultFlashMessage />
+					  <DefaultConnectApp {...props} />
+					  {/* eslint-disable-next-line react/prop-types */}
+					  <DataBrowserContainer hasCloneApp={props.hasCloneApp} />
+				  </section>
+	      </BrowserRouter>
+      </PersistGate>
+
 		</Provider>
 	</WithConfigProvider>
 );

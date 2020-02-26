@@ -36,7 +36,7 @@ module.exports = {
 	entry: [path.resolve(__dirname, 'app/src/index.js')],
 	output: {
 		path: path.resolve(__dirname, 'dist/app'),
-		publicPath: '/',
+		publicPath: process.env.public_path,
 		filename: isDevelopment ? '[name].js' : '[name].[chunkhash:8].js',
 	},
 	optimization: {
