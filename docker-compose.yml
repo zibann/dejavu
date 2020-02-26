@@ -18,9 +18,12 @@ services:
             - '9300:9300'
     # elasticsearch browser
     dejavu:
-        image: appbaseio/dejavu:3.2.3
+        # image: appbaseio/dejavu:3.2.3
+        build:
+          context: .
+          dockerfile: Dockerfile
         container_name: dejavu
         ports:
-            - '1358:1358'
-        links:
-            - elasticsearch
+            - '10358:1358'
+        # links:
+        #     - elasticsearch
