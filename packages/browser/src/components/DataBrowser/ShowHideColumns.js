@@ -141,7 +141,7 @@ class ShowHideColumns extends Component<Props, State> {
 			: allColumns;
 		const columns = isShowingNestedColumns
 			? nestedVisibleColumns
-			: visibleColumns;
+			    : visibleColumns;
 
 		return (
 			<Dropdown

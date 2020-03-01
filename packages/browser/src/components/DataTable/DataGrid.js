@@ -153,11 +153,11 @@ class DataGrid extends Component<Props, State> {
 			: 'properties';
 		const column = columns[columnIndex];
 
-    let value = getall(data[rowIndex], column);
-    value = value.join(' / ')
-    
-    if (column == 'pv_list') {
-      value = get(data[rowIndex], column);
+    let v = get(data[rowIndex], column);
+
+    if (column.startsWith("provider_candidates.")) {
+      v = getall(data[rowIndex], column);
+      v = v.join(' / ')
     }
 		return isMetaField(column) ? (
 			<div
@@ -167,7 +167,7 @@ class DataGrid extends Component<Props, State> {
 				}}
 				key={key}
 			>
-        {value}
+        {v}
 			</div>
 		) : (
 			<div
@@ -186,7 +186,7 @@ class DataGrid extends Component<Props, State> {
 					shouldAutoFocus
 					style={style}
 				>
-          {value}
+          {v}
 				</CellRender>
 			</div>
 		);
