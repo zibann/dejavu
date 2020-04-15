@@ -264,8 +264,17 @@ class ShowHideColumns extends Component<Props, State> {
     let selectedColumns = this.getSelectedColumns();
     const optionIndex = selectedColumns.indexOf(option.value);
     if (optionIndex === -1) {
-      let index = this.props.sortedColumns.indexOf(option.value)
-      selectedColumns.splice(index, 0, option.value);
+
+      selectedColumns = this.props.sortedColumns.filter((column) => {
+        let index = selectedColumns.indexOf(column)
+        if (index >= 0) {
+          return true
+        }
+        if (column === option.value) {
+          return true
+        }
+        return false
+      })
     } else {
       selectedColumns.splice(optionIndex, 1);
     }
